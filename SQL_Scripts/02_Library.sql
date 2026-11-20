@@ -1,0 +1,41 @@
+CREATE DATABASE DEPI_LibraryDB;
+GO
+USE DEPI_LibraryDB;
+GO
+
+CREATE TABLE Authors (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    BirthDate DATE NOT NULL
+);
+GO
+
+CREATE TABLE Books (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Title NVARCHAR(200) NOT NULL,
+    ISBN NVARCHAR(20) NOT NULL,
+    AuthorId INT NOT NULL,
+    CONSTRAINT FK_Books_Authors
+        FOREIGN KEY (AuthorId) REFERENCES Authors(Id)
+);
+GO
+
+CREATE TABLE Borrowers (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    MembershipDate DATE NOT NULL
+);
+GO
+
+CREATE TABLE Loans (
+    BookId INT NOT NULL,
+    BorrowerId INT NOT NULL,
+    LoanDate DATETIME2 NOT NULL,
+    ReturnDate DATETIME2 NULL,
+    CONSTRAINT PK_Loans PRIMARY KEY (BookId, BorrowerId, LoanDate),
+    CONSTRAINT FK_Loans_Books
+        FOREIGN KEY (BookId) REFERENCES Books(Id),
+    CONSTRAINT FK_Loans_Borrowers
+        FOREIGN KEY (BorrowerId) REFERENCES Borrowers(Id)
+);
+GO
